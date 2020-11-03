@@ -10,6 +10,10 @@ VACACIONES_TOMADAS_FILE = './src/vaciones_tomadas.csv'
 
 COLUMNS_RESUMEN_LEGAJO = ['Legajo','Apellido','Nombre','Total Vacaciones']
 
+def validar(num):
+    while num.isnumeric() == False:
+        num = input('valor no admitido, debe ingresar un número')
+    return int(num)
 
 def load_csv(file_path):
     """
@@ -33,15 +37,15 @@ def sobreescribiendo_df(df):
     while True:
         dicx = {}
         
-        dicx['Legajo'] = input('ingrese el cod legajo')
-        dicx['Apellido'] = input('ingrese el nombre')
-        dicx['Nombre'] = input('ingrese el apellido')
-        dicx['Total Vacaciones'] = input('ingrese el total vacaciones')
+        dicx['Legajo'] = validar(input('ingrese el cod legajo: '))
+        dicx['Apellido'] = input('ingrese el nombre: ')
+        dicx['Nombre'] = input('ingrese el apellido: ')
+        dicx['Total Vacaciones'] = validar(input('ingrese el total vacaciones: '))
         
         df_row = pd.DataFrame(dicx, index=[0])
 
         df_new = df_new.append(df_row, ignore_index=True)
-        
+
         op = input('Desea seguir ingresando nuevos datos? y|n')
         if 'n' == op.lower():
             break
@@ -59,13 +63,13 @@ def modificar_df(df_resumen, codigo_legado):
         print(f'codigo legajo ingresado no existe, {codigo_legado}')
         return
 
-    df = df_resumen[df_resumen['Legajo'] == codigo_legado]
+    mask = df_resumen['Legajo']== codigo_legado
 
-    df['Apellido'] = input('Apellido: ')
-    df['Nombre'] = input('Nombre: ')
-    df['Total Vacaciones'] = int(input('Total Vacaciones: '))
+    df_resumen.loc[mask, 'Apellido'] = input('Apellido: ')
+    df_resumen.loc[mask, 'Nombre'] = input('Nombre: ')
+    df_resumen.loc[mask, 'Total Vacaciones'] = validar(input('Total Vacaciones: '))
 
-    df.to_csv(RESUME_FILE, index=False, sep=';')
+    df_resumen.to_csv(RESUME_FILE, index=False, sep=';')
 
 
 def vaciones_restantes(df_resumen, df_detalle, codigo_legado):
