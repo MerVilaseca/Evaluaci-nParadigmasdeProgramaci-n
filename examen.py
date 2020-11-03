@@ -25,18 +25,45 @@ def load_csv(file_path):
 
 def sobreescribiendo_df(df):
     """
-    docstring
+    Creando nuevo dataframe
     """
-    pass
+    print('ingrese los nuevos datos')
 
-def modificar_df(df):
+    df_new = pd.DataFrame()
+    while True:
+        dicx = {}
+        
+        dicx['Legajo'] = input('ingrese el cod legajo')
+        dicx['Apellido'] = input('ingrese el nombre')
+        dicx['Nombre'] = input('ingrese el apellido')
+        dicx['Total Vacaciones'] = input('ingrese el total vacaciones')
+        
+        df_new.append(dicx, columns=COLUMNS_RESUMEN_LEGAJO)
+
+        op = input('Desea seguir ingresando nuevos datos? y|n')
+        if 'n' == op.lower():
+            break
+    
+    df.to_csv('./src/resumen_legajo_backup.csv', index=False, sep=';')
+    # nuevo
+    df_new.to_csv(RESUME_FILE, sep=';', index=False)
+
+def modificar_df(df_resumen, codigo_legado):
     """
-    docstring
+    Modificar archivo legado
     """
     print('ingrese el código de legado que desea modificar')
+    if codigo_legado not in df_resumen['Legajo'].unique():
+        print(f'codigo legajo ingresado no existe, {codigo_legado}')
+        return
 
-    df_resumen_legado['Legajo']
+    df = df_resumen[df_resumen['Legajo'] == codigo_legado]
 
+    df['Apellido'] = input('Apellido: ')
+    df['Nombre'] = input('Nombre: ')
+    df['Total Vacaciones'] = int(input('Total Vacaciones: '))
+
+    df.to_csv(RESUME_FILE, index=False, sep=';')
 
 
 def vaciones_restantes(df_resumen, df_detalle, codigo_legado):
@@ -80,23 +107,22 @@ def main():
                 ¿Qué acción desea realizar? Escribe una opción
                 1) Sobreescribir archivo
                 2) Modificar archivo 
-                3) Salir""")
+                3) Retornar al menú principal""")
             opcion_submenu = input()
             # submenu opciones
             if opcion_submenu == '1':
-                
+                sobreescribiendo_df(df)
 
-                pass
             elif opcion_submenu == '2':
+                codigo_legado = int(input('Ingrese el código de Legajo ...\n'))
+                
+                # procesando
+                modificar_df(df, codigo_legado)
 
-                pass
             elif opcion_submenu == '3':
-                print("¡Hasta luego! Ha sido un placer ayudarte")
                 continue
             else:
                 print("Comando desconocido, vuelve a intentarlo")
-
-            print(df)
         
         elif opcion == '2':
             codigo_legado = int(input('Ingrese el código de Legajo ...\n'))
@@ -119,3 +145,4 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         print(e)
+
