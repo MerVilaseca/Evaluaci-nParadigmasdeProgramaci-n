@@ -29,7 +29,7 @@ def sobreescribiendo_df(df):
     """
     print('ingrese los nuevos datos')
 
-    df_new = pd.DataFrame()
+    df_new = pd.DataFrame(columns = COLUMNS_RESUMEN_LEGAJO)
     while True:
         dicx = {}
         
@@ -38,8 +38,10 @@ def sobreescribiendo_df(df):
         dicx['Nombre'] = input('ingrese el apellido')
         dicx['Total Vacaciones'] = input('ingrese el total vacaciones')
         
-        df_new.append(dicx, columns=COLUMNS_RESUMEN_LEGAJO)
+        df_row = pd.DataFrame(dicx, index=[0])
 
+        df_new = df_new.append(df_row, ignore_index=True)
+        
         op = input('Desea seguir ingresando nuevos datos? y|n')
         if 'n' == op.lower():
             break
